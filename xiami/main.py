@@ -96,7 +96,7 @@ if __name__ == '__main__':
     resut_file = open('result.txt','w+')
     all_count = 1
 
-    for ids in range(85,1000):
+    for ids in range(503,1000):
         url = 'http://www.xiami.com/artist/top/id/'+str(ids)
         music.set_page_url(url)
         print 'id:',ids,' ',music.get_singer_info()[0],'  ',music.get_singer_info()[1]
@@ -120,9 +120,12 @@ if __name__ == '__main__':
                 break
             
             for i,link in enumerate(music_links):
-                strformat = '共抓取歌曲%d首 当前曲库编号%d  热度：%s  歌曲地址：%s      歌名：%s'
+                strformat = '共抓取歌曲%d首 当前曲库编号%d  热度：%s  歌曲地址：%s      歌名：%s\n'
                 strformat = unicode(strformat,'utf-8')
-                print strformat % (all_count,count,music_hots[i],link,music_names[i])
+                info =   strformat % (all_count,count,music_hots[i],link,music_names[i])
+                #info = unicode(info,'utf-8')
+                resut_file.writelines(info.encode('utf-8'))
+                print info,
 
                 #print '共抓取歌曲',str(all_count),'首 ',str(count),'\t热度: ',music_hots[i],'\t歌曲地址: ',link,'          歌名: ',music_names[i]
                 count += 1
@@ -133,7 +136,9 @@ if __name__ == '__main__':
         else:
             print 'id:',ids,'end' 
             print '**********************************************************'
+    else:
 
+        resut_file.close()
 
 
 

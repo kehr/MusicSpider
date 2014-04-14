@@ -54,3 +54,6 @@ docs/_build/
 
 # TODOLIST
 TODO*
+
+# Result file 
+./xiami/result.txt
