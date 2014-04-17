@@ -6,7 +6,8 @@
 # @Mail:		 kehr.china@gmail.com
 # @Created Time: Sun 13 Apr 2014 02:07:36 PM CST
 # @Copyright:    GPL 2.0 applies
-# @Description:                     
+# @Description:  Get xiami.com's hot music lists.this is just a test demo 
+#                which learn how to use BeautifulSoup and urllib2                    
 #########################################################################
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
@@ -16,13 +17,17 @@ import httplib
 class XiamiMusic():
 
     def __init__(self,url=None):
+        # 解决urllib2的bug问题，修改http协议为1.0，不使用1.1
         httplib.HTTPConnection._http_vsn = 10
         httplib.HTTPConnection._http_vsn_str = 'HTTP/1.0'
         self.url = url
         self.xiami_url = 'www.xiami.com'
+
+        # 虾米防爬虫，需要伪装成浏览器
         self.headers = {
                 'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) '
                 'Gecko/20091201 Firefox/3.5.6'}
+
         if self.url is not None:
             self.get_page_content()
     
@@ -39,7 +44,7 @@ class XiamiMusic():
         #only_main_content = SoupStrainer('div',attrs={'id':'main_content'},)
         #return BeautifulSoup(content,parse_only=only_main_content)
        
-        # check url is right
+        # check url is right。解决页面被重定向到首页的问题
         if page.geturl() == self.url:
             self.content = BeautifulSoup(page.read())
         else:
@@ -89,10 +94,11 @@ class XiamiMusic():
     def put_into_db(self, info):
         pass
 
-if __name__ == '__main__':
+def test():
     
     music = XiamiMusic()
     
+    # 暂时使用文件观测结果（TODO：使用sqlite存储）
     resut_file = open('result.txt','w+')
     all_count = 1
 
@@ -106,7 +112,8 @@ if __name__ == '__main__':
             url += '/page/'+str(pages)
             music.set_page_url(url)
             music_links,music_names,music_hots = music.get_music_basic_info()
-
+            
+            # 有些页面没有歌曲
             if not music_links:
                 print 'Empty ! '
                 print '----------------------------------------------------------'
@@ -140,5 +147,6 @@ if __name__ == '__main__':
 
         resut_file.close()
 
-
+if __name__ == '__main__':
+    test()
 
